@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Onboarding Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <form id="onboardingForm">
+            <div class="step" id="step1">
+                <h2>Personal Information</h2>
+                <label>Full Name<sup>*</sup> <input placeholder="Enter your name" type="text" name="fullName"
+                        required></label>
+                <label>Gender<sup>*</sup>
+                    <select name="gender" required class="select-placeholder">
+                        <option value="" disabled selected hidden class="placeholder">Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </label>
+
+                <label>Date of Birth<sup>*</sup> <input placeholder="Enter your date of birth" type="date" name="dob"
+                        required></label>
+                <label>Contact Number<sup>*</sup> <input placeholder="Enter your contact number" type="tel"
+                        name="contact" required pattern="[0-9]{10}"></label>
+                <label>Email Address<sup>*</sup> <input placeholder="Enter your email" type="email" name="email"
+                        required></label>
+                <label>Upload Profile Picture (Image files only, max 5MB):
+                    <input type="file" name="profilePic" accept="image/*">
+                </label>
+                <button type="button" onclick="nextStep(2)">Next</button>
+            </div>
+
+            <div class="step" id="step2" style="display: none;">
+                <h2>Professional Details</h2>
+                <label>Specialization<sup>*</sup>
+                    <select name="specialization" class="select-placeholder" required>
+                        <option value="" disabled selected hidden>Select Specialization</option>
+                        <option value="General Physician">General Physician</option>
+                        <option value="Cardiologist">Cardiologist</option>
+                        <option value="Dermatologist">Dermatologist</option>
+                    </select>
+                </label>
+                <label>Degrees & Certification
+                    <input type="file" name="degree" accept=".pdf,.doc,.docx">
+                </label>
+                <label>Medical Registration Number<sup>*</sup> <input
+                        placeholder="Enter your Medical Registration Number" type="text" name="registration"
+                        required></label>
+                <label>Years of Experience<sup>*</sup> <input placeholder="Enter your years of experience" type="number"
+                        name="experience" required></label>
+                <label>Areas of Expertise<sup>*</sup>
+                    <select name="expertise" class="select-placeholder" required>
+                        <option value="" disabled selected hidden>Select Expertise</option>
+                        <option value="Diabetes Management">Diabetes Management</option>
+                        <option value="Sports Medicine">Sports Medicine</option>
+                        <option value="Pediatric Care">Pediatric Care</option>
+                    </select>
+                </label>
+                <label>Medical Council Registration Proof (PDF or DOC, max 5MB):
+                    <input type="file" name="proof" accept=".pdf,.doc,.docx,image/*">
+                </label>
+                <label>License Validity Period<sup>*</sup> <input placeholder="Enter the license validity period"
+                        type="date" name="validity" required></label>
+                <button type="button" onclick="prevStep(1)">Previous</button>
+                <button type="button" onclick="nextStep(3)">Next</button>
+            </div>
+
+            <div class="step" id="step3" style="display: none;">
+                <h2>Practice Details</h2>
+                <label>Current Affiliation<sup>*</sup> <input placeholder="Enter your current clinic/hospital name"
+                        type="text" name="affiliation" required></label>
+                <label class="consultation-header">Consultation Type<sup>*</sup></label>
+                <div class="checkbox-container">
+                    <label><input type="checkbox" id="consultationType" name="consultationType1" value="Online"> Online
+                        Consultation</label>
+                    <label><input type="checkbox" id="consultationType" name="consultationType2" value="InPerson">
+                        In-Person Consultation</label>
+                    <label><input type="checkbox" id="consultationType" name="consultationType3" value="Home"> Home
+                        Visit</label>
+                    <label><input type="checkbox" id="consultationType" name="consultationType4" value="Video"> Video
+                        Consultation</label>
+                    <label><input type="checkbox" id="consultationType" name="consultationType5" value="Phone"> Phone
+                        Consultation</label>
+                    <div class="selected-consultations"></div>
+                </div>
+
+
+                <label>Consultation Fee<sup>*</sup><span style="color: #9DABB2;">(in ₹)</span><input
+                        placeholder="Enter your one-time consultation fee" type="number" name="fee" required></label>
+                <label>Availability<sup>*</sup> <input placeholder="Enter your availability" type="text"
+                        name="availability" required></label>
+                <label>Preferred Consultation Platform (for online consultations)
+                    <select name="platform" class="select-placeholder">
+                        <option value="" disabled selected hidden class="placeholder">Select your preferred platform
+                        </option>
+                        <option value="Zoom">Zoom</option>
+                        <option value="Google Meet">Google Meet</option>
+                        <option value="In-app Video Call">In-app Video Call</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <button type="button" onclick="prevStep(2)">Previous</button>
+                <button type="button" onclick="nextStep(4)">Next</button>
+            </div>
+
+            <div class="step" id="step4" style="display: none;">
+                <h2>Banking & Payment Details</h2>
+                <label>Bank Account Number<sup>*</sup> <input placeholder="Enter your account number" type="text"
+                        name="bankAccount" required></label>
+                <label>Account Holder's Name<sup>*</sup> <input placeholder="Enter your account holder's name"
+                        type="text" name="accountHolder" required></label>
+                <label>Bank Name<sup>*</sup> <input placeholder="Enter your bank name" type="text" name="bankName"
+                        required></label>
+                <label>IFSC Code<sup>*</sup> <input placeholder="Enter your bank's IFSC code" type="text" name="ifsc"
+                        required></label>
+                <label>UPI ID <span style="color: #9DABB2;">(Optional) </span><input placeholder="Enter your UPI Id"
+                        type="text" name="upi"></label>
+                <label>GSTIN <span style="color: #9DABB2;">(If applicable)</span><input placeholder="Enter your GSTIN"
+                        type="text" name="gstin"></label>
+                <button type="button" onclick="prevStep(3)">Previous</button>
+                <button type="button" onclick="nextStep(5)">Next</button>
+            </div>
+
+            <div class="step" id="step5" style="display: none;">
+                <h2>Profile Description & Bio</h2>
+                <label>Short Bio<sup>*</sup> <textarea name="bio" maxlength="250" required></textarea></label>
+                <label>Professional Achievements: <textarea name="achievements"></textarea></label>
+                <label>Languages Spoken<sup>*</sup> <input placeholder="Enter the number of languages spoken"
+                        type="text" name="languages" required></label>
+                <label>Upload Resume (PDF or DOC, max 5MB, Optional):
+                    <input type="file" name="resume" accept=".pdf,.doc,.docx">
+                </label>
+                <button type="button" onclick="prevStep(4)">Previous</button>
+                <button type="button" onclick="nextStep(6)">Next</button>
+            </div>
+
+            <div class="step" id="step6" style="display: none;">
+                <h2>Terms & Conditions & Privacy Consent</h2>
+                <label> <input type="checkbox" required> I agree to provide authentic information and comply with
+                    Fittr's guidelines<sup>*</sup></label>
+                <label> <input type="checkbox" required> I consent to the processing of my data for consultation and
+                    profile management<sup>*</sup></label>
+                <label> <input type="checkbox" required> I agree to revenue share agreements and Fittr's revenue
+                    policies<sup>*</sup></label>
+                <label>Digital Signature<sup>*</sup> <input placeholder="Enter your digital signature" type="text"
+                        name="signature" required></label>
+                <label>Date of Submission<sup>*</sup> <input placeholder="Enter the date of submission" type="date"
+                        name="submissionDate" required></label>
+                <button type="button" onclick="prevStep(5)">Previous</button>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</body>
+
+</html>
