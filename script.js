@@ -1,79 +1,417 @@
-function nextStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
-    document.getElementById(`step${step}`).style.display = 'block';
-}
+const Validators = {
 
-function prevStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
-    document.getElementById(`step${step}`).style.display = 'block';
-}
+    fullName: function(value) {
+        const nameRegex = /^[A-Za-z\s]{3,}$/;
+        if (!value.trim()) return "Full Name is required.";
+        if (!nameRegex.test(value)) return "Please enter a valid full name (minimum 4 characters, letters only).";
+        if (value.split(' ').length < 2) return "Please enter both first and last name.";
+        return '';
+    },
 
-function validateFileType(input) {
-    const allowedTypes = [
-        'application/pdf',      
-        'application/msword',   
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-        'image/jpeg',           
-        'image/png',          
-        'image/webp'         
-    ];
+    accountHolder: function(value) {
+        const nameRegex = /^[A-Za-z\s]{3,}$/;
+        if (!value.trim()) return "Full Name is required.";
+        if (!nameRegex.test(value)) return "Please enter a valid account holder's name (minimum 3 characters, letters only).";
+        if (value.split(' ').length < 2) return "Please enter both first and last name.";
+        return '';
+    },
 
-    const maxFileSize = 5 * 1024 * 1024; 
+    signature: function(value) {
+        const nameRegex = /^[A-Za-z\s]{3,}$/;
+        if (!value.trim()) return "Full Name is required.";
+        if (!nameRegex.test(value)) return "Please enter a valid account holder's name (minimum 3 characters, letters only).";
+        if (value.split(' ').length < 2) return "Please enter both first and last name.";
+        return '';
+    },
 
-    const file = input.files[0];
-    
-    if (file) {
-        if (!allowedTypes.includes(file.type)) {
-            showError(input, 'Only PDF, DOC, and image files are allowed');
-            input.value = '';
-            return false;
+    bankName: function(value) {
+        const nameRegex = /^[A-Za-z\s]{3,}$/;
+        if (!value.trim()) return "Bank Name is required.";
+        return '';
+    },
+
+    affiliation: function(value) {
+        const nameRegex = /^[A-Za-z\s]{3,}$/;
+        if (!value.trim()) return "Current Clinic/Hospital name is required.";
+        return '';
+    },
+
+    dob: function(value) {
+        if (!value) return "Date of Birth is required.";
+        
+        const selectedDate = new Date(value);
+        const currentDate = new Date();
+        
+        let age = currentDate.getFullYear() - selectedDate.getFullYear();
+        const monthDiff = currentDate.getMonth() - selectedDate.getMonth();
+        const dayDiff = currentDate.getDate() - selectedDate.getDate();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
         }
+        
+        if (age < 18) return "You must be at least 18 years old to register.";
+        if (age > 100) return "Please enter a valid birth date.";
+        return '';
+    },
 
-        if (file.size > maxFileSize) {
-            showError(input, 'File size must be less than 5MB');
-            input.value = '';
-            return false;
+    contact: function(value) {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!value) return "Contact Number is required.";
+        if (!phoneRegex.test(value)) return "Please enter a valid 10-digit mobile number starting with 6-9.";
+        return '';
+    },
+
+    email: function(value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) return "Email Address is required.";
+        if (!emailRegex.test(value)) return "Please enter a valid email address.";
+        return '';
+    },
+
+    Gender: function(value) {
+        if (!value) return "Gender is required.";
+        return '';
+    },
+
+    expertise: function(value) {
+        if (!value) return "Expertise is required.";
+        return '';
+    },
+
+    specialization: function(value) {
+        if (!value) return "Specialization is required.";
+        return '';
+    },
+
+    registration: function(value) {
+        const regexPattern = /^[A-Z]{2}\d{6}$/;
+        if (!value) return "Medical Registration Number is required.";
+        if (!regexPattern.test(value)) return "Invalid Registration Number. Format should be 2 uppercase letters followed by 6 digits.";
+        return '';
+    },
+
+    experience: function(value) {
+        if (!value) return "Years of Experience is required.";
+        const exp = parseInt(value);
+        if (isNaN(exp) || exp < 0) return "Please enter a valid number of years.";
+        if (exp > 50) return "Years of experience seems unrealistic.";
+        return '';
+    },
+
+    fee: function(value) {
+        if (!value) return "Consultation Fee is required.";
+        const feeAmount = parseInt(value);
+        if (isNaN(feeAmount) || feeAmount < 0) return "Please enter a valid fee amount.";
+        if (feeAmount > 10000) return "Consultation fee seems unusually high.";
+        return '';
+    },
+
+    bankAccount: function(value) {
+        const accountRegex = /^\d{9,18}$/;
+        if (!value) return "Bank Account Number is required.";
+        if (!accountRegex.test(value)) return "Invalid Bank Account Number (9-18 digits).";
+        return '';
+    },
+
+    ifsc: function(value) {
+        const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+        if (!value) return "IFSC Code is required.";
+        if (!ifscRegex.test(value)) return "Invalid IFSC Code format.";
+        return '';
+    },
+
+    bio: function(value) {
+        if (!value.trim()) return "Short Bio is required.";
+        if (value.length < 50) return "Bio should be at least 50 characters long.";
+        if (value.length > 250) return "Bio should not exceed 250 characters.";
+        return '';
+    },
+
+    languages: function(value) {
+        if (!value) return "Languages Spoken is required.";
+        const langCount = parseInt(value);
+        if (isNaN(langCount) || langCount < 1) return "Please enter a valid number of languages.";
+        if (langCount > 10) return "Number of languages seems unrealistic.";
+        return '';
+    },
+
+    validity: function(value) {
+        if (!value) return "License Validity Period is required.";
+        
+        const selectedDate = new Date(value);
+        const currentDate = new Date();
+        
+        if (selectedDate < currentDate) {
+            return "License validity date must be in the future.";
         }
+        
+        const maxValidityDate = new Date();
+        maxValidityDate.setFullYear(maxValidityDate.getFullYear() + 5);
+        
+        if (selectedDate > maxValidityDate) {
+            return "License validity cannot exceed 5 years from today.";
+        }
+        
+        return '';
+    },
 
-        clearError(input);
-        return true;
+    availability: function(value) {
+        if (!value) return "Availability dates are required.";
+        
+        const dates = value.split(', ');
+        
+        if (dates.length === 0) {
+            return "Please select at least one availability date.";
+        }
+        
+        for (let dateStr of dates) {
+            const selectedDate = new Date(dateStr);
+            const currentDate = new Date();
+            
+            if (selectedDate < currentDate) {
+                return "All availability dates must be in the future.";
+            }
+            
+            const maxAvailabilityDate = new Date();
+            maxAvailabilityDate.setMonth(maxAvailabilityDate.getMonth() + 6);
+            
+            if (selectedDate > maxAvailabilityDate) {
+                return "Availability dates cannot be more than 6 months in the future.";
+            }
+        }
+        
+        return '';
+    },
+
+    submissionDate: function(value) {
+        if (!value) return "Submission Date is required.";
+        
+        const selectedDate = new Date(value);
+        const currentDate = new Date();
+        
+        if (selectedDate < currentDate) {
+            return "Submission date cannot be in the past.";
+        }
+        
+        const maxSubmissionDate = new Date();
+        maxSubmissionDate.setMonth(maxSubmissionDate.getMonth() + 3);
+        
+        if (selectedDate > maxSubmissionDate) {
+            return "Submission date cannot be more than 3 months in the future.";
+        }
+        
+        return '';
     }
-    return true;
+};
+
+function showError(input, errorMessage) {
+    const existingError = input.parentNode.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    const errorElement = document.createElement('div');
+    errorElement.className = 'error-message';
+    errorElement.textContent = errorMessage;
+    errorElement.style.color = 'rgb(242, 91, 81)';
+    errorElement.style.fontSize = '0.8em';
+    errorElement.style.marginTop = '5px';
+    
+    input.classList.add('error');
+    input.parentNode.insertBefore(errorElement, input.nextSibling);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const checkboxes = document.querySelectorAll('input[id="consultationType"]');
-    const selectedContainer = document.querySelector('.selected-consultations');
+function clearError(input) {
+    input.classList.remove('error');
+    const errorElement = input.parentNode.querySelector('.error-message');
+    if (errorElement) {
+        errorElement.remove();
+    }
+}
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const selectedValues = Array.from(checkboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.value);
+function validateStep(currentStepNumber) {
+    const currentStep = document.getElementById(`step${currentStepNumber}`);
+    const requiredInputs = currentStep.querySelectorAll('[required]');
+    let isValid = true;
 
-            selectedContainer.innerHTML = '';
+    currentStep.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    currentStep.querySelectorAll('.error-message').forEach(el => el.remove());
 
-            selectedValues.forEach(value => {
-                const tag = document.createElement('span');
-                tag.classList.add('tag');
-                tag.textContent = value;
+    requiredInputs.forEach(input => {
+        let errorMessage = '';
 
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'x';
-                removeBtn.classList.add('remove-btn');
+        switch(input.name) {
+            case 'fullName':
+                errorMessage = Validators.fullName(input.value);
+                break;
+            case 'dob':
+                errorMessage = Validators.dob(input.value);
+                break;
+            case 'contact':
+                errorMessage = Validators.contact(input.value);
+                break;
+            case 'email':
+                errorMessage = Validators.email(input.value);
+                break;
+            case 'specialization':
+                errorMessage = Validators.specialization(input.value);
+                break;
+            case 'accountHolder':
+                errorMessage = Validators.accountHolder(input.value);
+                break;
+            case 'affiliation':
+                errorMessage = Validators.affiliation(input.value);
+                break;
+            case 'bankName':
+                errorMessage = Validators.bankName(input.value);
+                break;
+            case 'expertise':
+                errorMessage = Validators.expertise(input.value);
+                break
+            case 'Gender':
+                errorMessage = Validators.Gender(input.value);
+                break;
+            case 'registration':
+                errorMessage = Validators.registration(input.value);
+                break;
+            case 'validity':
+                errorMessage = Validators.validity(input.value);
+                break;
+            case 'availability':
+                errorMessage = Validators.availability(input.value);
+                break;
+            case 'submissionDate':
+                errorMessage = Validators.submissionDate(input.value);
+                break;
+            case 'experience':
+                errorMessage = Validators.experience(input.value);
+                break;
+            case 'fee':
+                errorMessage = Validators.fee(input.value);
+                break;
+            case 'signature':
+                errorMessage = Validators.signature(input.value);
+                break;
+            case 'bankAccount':
+                errorMessage = Validators.bankAccount(input.value);
+                break;
+            case 'ifsc':
+                errorMessage = Validators.ifsc(input.value);
+                break;
+            case 'bio':
+                errorMessage = Validators.bio(input.value);
+                break;
+            case 'languages':
+                errorMessage = Validators.languages(input.value);
+                break;
+            default:
+                // for other required fields, check if they're empty
+                if (!input.value.trim()) {
+                    errorMessage = `${input.name} is required.`;
+                }
+        }
 
-                removeBtn.onclick = () => {
-                    document.querySelector(`input[value="${value}"]`).checked = false;
-                    tag.remove();
-                };
+        // checkbox group for consultation types
+        // if (input.name.startsWith('consultationType')) {
+        //     const checkboxGroup = input.closest('.checkbox-container');
+        //     const checkedBoxes = checkboxGroup.querySelectorAll('input[type="checkbox"]:checked');
+            
+        //     if (checkedBoxes.length === 0) {
+        //         errorMessage = "Please select at least one consultation type.";
+        //         checkboxGroup.classList.add('error');
+        //     }
+        // }
 
-                tag.appendChild(removeBtn);
-                selectedContainer.appendChild(tag);
-            });
-        });
+        if (errorMessage) {
+            if (input.name.startsWith('consultationType')) {
+                showError(input.closest('.checkbox-container'), errorMessage);
+            } else {
+                showError(input, errorMessage);
+            }
+            isValid = false;
+        }
     });
+
+    return isValid;
+}
+
+function nextStep(stepNumber) {
+    const currentStepNumber = stepNumber - 1;
+    if (!validateStep(currentStepNumber)) {
+        return;
+    }
+
+    window.scrollTo({top: 0});
+    
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+        step.style.display = 'none';
+    });
+    
+    document.getElementById(`step${stepNumber}`).style.display = 'block';
+}
+
+function prevStep(stepNumber) {
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+        step.style.display = 'none';
+    });
+    
+    document.getElementById(`step${stepNumber}`).style.display = 'block';
+}
+
+document.getElementById('onboardingForm').addEventListener('input', function(e) {
+    if (e.target.hasAttribute('required') || e.target.closest('.checkbox-container')) {
+        clearTimeout(e.target.validationTimer);
+        e.target.validationTimer = setTimeout(() => {
+            if (e.target.name.startsWith('consultationType')) {
+                const checkboxGroup = e.target.closest('.checkbox-container');
+                const checkedBoxes = checkboxGroup.querySelectorAll('input[type="checkbox"]:checked');
+                
+                if (checkedBoxes.length === 0) {
+                    showError(checkboxGroup, "Please select at least one consultation type.");
+                } else {
+                    checkboxGroup.classList.remove('error');
+                    const errorMsg = checkboxGroup.querySelector('.error-message');
+                    if (errorMsg) errorMsg.remove();
+                }
+            } 
+            else {
+                const validatorFunc = Validators[e.target.name];
+                if (validatorFunc) {
+                    const errorMessage = validatorFunc(e.target.value);
+                    if (errorMessage) {
+                        showError(e.target, errorMessage);
+                    } else {
+                        clearError(e.target);
+                    }
+                }
+            }
+        }, 300);
+    }
 });
 
+const styleTag = document.createElement('style');
+styleTag.textContent = `
+    input.error, select.error, textarea.error {
+        border: 2px solid rgb(242, 91, 81); important;
+        animation: shake 0.3s;
+    }
+    .checkbox-container.error {
+        border: 2px solid rgb(242, 91, 81);;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        50% { transform: translateX(10px); }
+        75% { transform: translateX(-10px); }
+        100% { transform: translateX(0); }
+    }
+`;
+document.head.appendChild(styleTag);
 
 document.addEventListener('DOMContentLoaded', function () {
     flatpickr('input[name="availability"]', {
@@ -110,190 +448,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function showError(input, message) {
-    const existingError = input.nextElementSibling;
-    if (existingError && existingError.classList.contains('error-message')) {
-        existingError.remove();
-    }
-
-    const errorMessage = document.createElement('div');
-    errorMessage.className = 'error-message';
-    errorMessage.style.color = '#f25b51';
-    errorMessage.style.fontSize = '0.8em';
-    errorMessage.style.marginTop = '5px';
-    errorMessage.textContent = message;
-
-    input.parentNode.insertBefore(errorMessage, input.nextSibling);
-}
-
-function clearError(input) {
-    const existingError = input.nextElementSibling;
-    if (existingError && existingError.classList.contains('error-message')) {
-        existingError.remove();
-    }
-}
-
-// validation
-const validators = {
-    fullName: function(input) {
-        const value = input.value.trim();
-        if (value.length < 2) {
-            showError(input, 'Name must be at least 2 characters long');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    contact: function(input) {
-        const phoneRegex = /^[6-9]\d{9}$/;
-        if (!phoneRegex.test(input.value)) {
-            showError(input, 'Please enter a valid 10-digit Indian mobile number');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    email: function(input) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(input.value)) {
-            showError(input, 'Please enter a valid email address');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    dob: function(input) {
-        const selectedDate = new Date(input.value);
-        const currentDate = new Date();
-        const minAge = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
-        
-        if (selectedDate > currentDate) {
-            showError(input, 'Date of birth cannot be in the future');
-            return false;
-        }
-        if (selectedDate > minAge) {
-            showError(input, 'You must be at least 18 years old');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    experience: function(input) {
-        const exp = parseInt(input.value);
-        if (isNaN(exp) || exp < 0 || exp > 50) {
-            showError(input, 'Please enter a valid years of experience (0-50)');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    fee: function(input) {
-        const fee = parseFloat(input.value);
-        if (isNaN(fee) || fee < 0 || fee > 10000) {
-            showError(input, 'Please enter a valid consultation fee (0-10000)');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    languages: function(input) {
-        const langs = input.value.trim();
-        if (langs === '' || isNaN(langs) || parseInt(langs) < 1) {
-            showError(input, 'Please enter the number of languages spoken');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    bankAccount: function(input) {
-        const accountRegex = /^\d{9,18}$/;
-        if (!accountRegex.test(input.value)) {
-            showError(input, 'Please enter a valid bank account number');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    ifsc: function(input) {
-        const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
-        if (!ifscRegex.test(input.value)) {
-            showError(input, 'Please enter a valid IFSC code');
-            return false;
-        }
-        clearError(input);
-        return true;
-    },
-    bio: function(input) {
-        const value = input.value.trim();
-        if (value.length < 10 || value.length > 250) {
-            showError(input, 'Bio must be between 10 and 250 characters');
-            return false;
-        }
-        clearError(input);
-        return true;
-    }
-};
-
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('onboardingForm');
-    const steps = document.querySelectorAll('.step');
-
-    const validationFields = [
-        'fullName', 'contact', 'email', 'dob', 'experience', 
-        'fee', 'languages', 'bankAccount', 'ifsc', 'bio'
-    ];
-
-    validationFields.forEach(fieldName => {
-        const input = document.querySelector(`[name="${fieldName}"]`);
-        if (input) {
-            let hasInteracted = false;
-
-            input.addEventListener('focus', () => {
-                hasInteracted = false;
-            });
-
-            input.addEventListener('blur', () => {
-                hasInteracted = true;
-                if (input.value) {
-                    validators[fieldName](input);
-                }
-            });
-
-            input.addEventListener('input', () => {
-                if (hasInteracted && input.value) {
-                    validators[fieldName](input);
-                } else {
-                    clearError(input);
-                }
-            });
-        }
-    });
-
-    // form submission validation
-    form.addEventListener('submit', function(event) {
-        let isValid = true;
-
-        validationFields.forEach(fieldName => {
-            const input = document.querySelector(`[name="${fieldName}"]`);
-            if (input) {
-                if (!validators[fieldName](input)) {
-                    isValid = false;
-                }
-            }
-        });
-
-        if (!isValid) {
-            event.preventDefault();
-        }
-    });
-});
-
-// google sheet code
+// google sheet submission
 const scriptURL = 'https://script.google.com/macros/s/AKfycbycop0qzob0WEiXMOovhhGjDGPoyj2-pOFM3EKeJhLSBdNXXpkIXsDRIBZGk4kjgobM/exec'
 const form = document.getElementById('onboardingForm')
 
 form.addEventListener('submit', e => {
-  e.preventDefault()
+  e.preventDefault();
+
+  if (!validateStep(6)) {
+    return;
+}
 
   const submitButton = form.querySelector('button[type="submit"]');
     submitButton.disabled = true;

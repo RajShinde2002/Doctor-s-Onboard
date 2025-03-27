@@ -15,13 +15,17 @@
 
 <body>
     <div class="container">
+        <div><img src="banner.jpeg" class="banner" alt="Banner"></div>
+    <div class="sub-container">
         <form id="onboardingForm">
             <div class="step" id="step1">
                 <h2>Personal Information</h2>
                 <label>Full Name<sup>*</sup> <input placeholder="Enter your name" type="text" name="fullName"
-                        required></label>
+                        required>
+                    <div class="error-msg"></div>
+                    </label>
                 <label>Gender<sup>*</sup>
-                    <select name="gender" required class="select-placeholder">
+                    <select name="Gender" required class="select-placeholder">
                         <option value="" disabled selected hidden class="placeholder">Select your gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -36,11 +40,13 @@
                         name="contact" required pattern="[0-9]{10}"></label>
                 <label>Email Address<sup>*</sup> <input placeholder="Enter your email" type="email" name="email"
                         required></label>
-                <label>Upload Profile Picture (Image files only, max 5MB):
+                <label>Upload Profile Picture (Image files only, max 5MB)
                     <input type="file" name="profilePic" accept="image/*">
                 </label>
-                <button type="button" onclick="nextStep(2)">Next</button>
-            </div>
+                <div class="button-container">
+                    <button type="button" class="next" onclick="nextStep(2)">Next</button>
+                </div>
+                </div>
 
             <div class="step" id="step2" style="display: none;">
                 <h2>Professional Details</h2>
@@ -68,40 +74,42 @@
                         <option value="Pediatric Care">Pediatric Care</option>
                     </select>
                 </label>
-                <label>Medical Council Registration Proof (PDF or DOC, max 5MB):
+                <label>Medical Council Registration Proof (PDF or DOC, max 5MB)
                     <input type="file" name="proof" accept=".pdf,.doc,.docx,image/*">
                 </label>
                 <label>License Validity Period<sup>*</sup> <input placeholder="Enter the license validity period"
                         type="date" name="validity" required></label>
-                <button type="button" onclick="prevStep(1)">Previous</button>
-                <button type="button" onclick="nextStep(3)">Next</button>
+                        <div class="button-container">
+                <button type="button" class="prev" onclick="prevStep(1)">Previous</button>
+                <button type="button" class="next" onclick="nextStep(3)">Next</button>
+                </div>
             </div>
 
             <div class="step" id="step3" style="display: none;">
                 <h2>Practice Details</h2>
                 <label>Current Affiliation<sup>*</sup> <input placeholder="Enter your current clinic/hospital name"
                         type="text" name="affiliation" required></label>
-                <label class="consultation-header">Consultation Type<sup>*</sup></label>
-                <div class="checkbox-container">
-                    <label><input type="checkbox" id="consultationType" name="consultationType1" value="Online"> Online
-                        Consultation</label>
-                    <label><input type="checkbox" id="consultationType" name="consultationType2" value="InPerson">
-                        In-Person Consultation</label>
-                    <label><input type="checkbox" id="consultationType" name="consultationType3" value="Home"> Home
-                        Visit</label>
-                    <label><input type="checkbox" id="consultationType" name="consultationType4" value="Video"> Video
-                        Consultation</label>
-                    <label><input type="checkbox" id="consultationType" name="consultationType5" value="Phone"> Phone
-                        Consultation</label>
-                    <div class="selected-consultations"></div>
-                </div>
-
-
-                <label>Consultation Fee<sup>*</sup><span style="color: #9DABB2;">(in ₹)</span><input
-                        placeholder="Enter your one-time consultation fee" type="number" name="fee" required></label>
-                <label>Availability<sup>*</sup> <input placeholder="Enter your availability" type="text"
-                        name="availability" required></label>
-                <label>Preferred Consultation Platform (for online consultations)
+                        
+                        
+                        <label>Consultation Fee<sup>*</sup><span style="color: #9DABB2;">(in ₹)</span><input
+                            placeholder="Enter your one-time consultation fee" type="number" name="fee" required></label>
+                            <label>Availability<sup>*</sup> <input placeholder="Enter your availability" type="text"
+                                name="availability" required></label>
+                                <label class="consultation-header">Consultation Type </label>
+                                <div class="checkbox-container">
+                                    <label><input type="checkbox" id="consultationType" name="consultationType1" value="Online"> Online
+                                        Consultation</label>
+                                    <label><input type="checkbox" id="consultationType" name="consultationType2" value="InPerson">
+                                        In-Person Consultation</label>
+                                    <label><input type="checkbox" id="consultationType" name="consultationType3" value="Home"> Home
+                                        Visit</label>
+                                    <label><input type="checkbox" id="consultationType" name="consultationType4" value="Video"> Video
+                                        Consultation</label>
+                                    <label><input type="checkbox" id="consultationType" name="consultationType5" value="Phone"> Phone
+                                        Consultation</label>
+                                    <div class="selected-consultations"></div>
+                                </div>
+                                <label>Preferred Consultation Platform (for online consultations)
                     <select name="platform" class="select-placeholder">
                         <option value="" disabled selected hidden class="placeholder">Select your preferred platform
                         </option>
@@ -111,8 +119,10 @@
                         <option value="Other">Other</option>
                     </select>
                 </label>
-                <button type="button" onclick="prevStep(2)">Previous</button>
-                <button type="button" onclick="nextStep(4)">Next</button>
+                <div class="button-container">
+                <button type="button" class="prev" onclick="prevStep(2)">Previous</button>
+                <button type="button" class="next" onclick="nextStep(4)">Next</button>
+                </div>
             </div>
 
             <div class="step" id="step4" style="display: none;">
@@ -129,8 +139,10 @@
                         type="text" name="upi"></label>
                 <label>GSTIN <span style="color: #9DABB2;">(If applicable)</span><input placeholder="Enter your GSTIN"
                         type="text" name="gstin"></label>
-                <button type="button" onclick="prevStep(3)">Previous</button>
-                <button type="button" onclick="nextStep(5)">Next</button>
+                        <div class="button-container">
+                <button type="button" class="prev" onclick="prevStep(3)">Previous</button>
+                <button type="button" class="next" onclick="nextStep(5)">Next</button>
+                </div>
             </div>
 
             <div class="step" id="step5" style="display: none;">
@@ -139,11 +151,13 @@
                 <label>Professional Achievements: <textarea name="achievements"></textarea></label>
                 <label>Languages Spoken<sup>*</sup> <input placeholder="Enter the number of languages spoken"
                         type="text" name="languages" required></label>
-                <label>Upload Resume (PDF or DOC, max 5MB, Optional):
+                <label>Upload Resume (PDF or DOC, max 5MB, Optional)
                     <input type="file" name="resume" accept=".pdf,.doc,.docx">
                 </label>
-                <button type="button" onclick="prevStep(4)">Previous</button>
-                <button type="button" onclick="nextStep(6)">Next</button>
+                <div class="button-container">
+                <button type="button" class="prev" onclick="prevStep(4)">Previous</button>
+                <button type="button" class="next" onclick="nextStep(6)">Next</button>
+                </div>
             </div>
 
             <div class="step" id="step6" style="display: none;">
@@ -158,10 +172,13 @@
                         name="signature" required></label>
                 <label>Date of Submission<sup>*</sup> <input placeholder="Enter the date of submission" type="date"
                         name="submissionDate" required></label>
-                <button type="button" onclick="prevStep(5)">Previous</button>
+                        <div class="button-container">
+                <button type="button" class="prev" onclick="prevStep(5)">Previous</button>
                 <button type="submit">Submit</button>
+                </div>
             </div>
         </form>
+    </div>
     </div>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
